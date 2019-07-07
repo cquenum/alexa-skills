@@ -1,0 +1,442 @@
+/* eslint-disable  func-names */
+/* eslint-disable  no-console */
+
+const Alexa = require('ask-sdk');
+
+const AfricanProverbHandler = {
+  canHandle(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+    return request.type === 'LaunchRequest' ||
+      (request.type === 'IntentRequest' &&
+        request.intent.name === 'AfricanProverbIntent');
+  },
+  handle(handlerInput) {
+    const proverbArr = data;
+    const proverbIndex = Math.floor(Math.random() * proverbArr.length);
+    const randomProverb = proverbArr[proverbIndex];
+    const speechOutput = randomProverb;
+
+    return handlerInput.responseBuilder
+      .speak(speechOutput)
+      .withSimpleCard(SKILL_NAME, randomProverb)
+      .getResponse();
+  },
+};
+
+const HelpHandler = {
+  canHandle(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+    return request.type === 'IntentRequest' &&
+      request.intent.name === 'AMAZON.HelpIntent';
+  },
+  handle(handlerInput) {
+    return handlerInput.responseBuilder
+      .speak(HELP_MESSAGE)
+      .reprompt(HELP_REPROMPT)
+      .getResponse();
+  },
+};
+
+const ExitHandler = {
+  canHandle(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+    return request.type === 'IntentRequest' &&
+      (request.intent.name === 'AMAZON.CancelIntent' ||
+        request.intent.name === 'AMAZON.StopIntent');
+  },
+  handle(handlerInput) {
+    return handlerInput.responseBuilder
+      .speak(STOP_MESSAGE)
+      .getResponse();
+  },
+};
+
+const SessionEndedRequestHandler = {
+  canHandle(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+    return request.type === 'SessionEndedRequest';
+  },
+  handle(handlerInput) {
+    console.log(`Session ended with reason: ${handlerInput.requestEnvelope.request.reason}`);
+
+    return handlerInput.responseBuilder.getResponse();
+  },
+};
+
+const ErrorHandler = {
+  canHandle() {
+    return true;
+  },
+  handle(handlerInput, error) {
+    console.log(`Error handled: ${error.message}`);
+
+    return handlerInput.responseBuilder
+      .speak('Sorry, an error occurred.')
+      .reprompt('Sorry, an error occurred.')
+      .getResponse();
+  },
+};
+
+const SKILL_NAME = 'African Proverbs';
+const GET_PROVERB_MESSAGE = 'African proverbs you didn\'t know: ';
+const HELP_MESSAGE = 'You can say Alexa, get a quote from african proverb, or, you can say exit... What can I help you with?';
+const HELP_REPROMPT = 'What can I help you with?';
+const STOP_MESSAGE = 'Goodbye!';
+
+const data = [
+  'Wisdom is wealth. Swahili proverb',
+  'Wisdom is like a baobab tree; no one individual can embrace it. Akan proverb',
+  'The fool speaks, the wise man listens. Ethiopian proverb',
+  'Wisdom does not come overnight. Somali proverb',
+  'The heart of the wise man lies quiet like limpid water. Cameroon proverb',
+  'When you follow in the path of your father, you learn to walk like him. Ashanti',
+  'Wisdom is like fire. People take it from others. Hema (DRC) proverb',
+  'Only a wise person can solve a difficult problem. Akan proverb',
+  'Knowledge without wisdom is like water in the sand. Guinean proverb',
+  'In the moment of crisis, the wise build bridges and the foolish build dams. Nigerian proverb',
+  'If you are filled with pride, then you will have no room for wisdom. African proverb',
+  'A wise person will always find a way. Tanzanian proverb',
+  'Nobody is born wise. African proverb',
+  'A man who uses force is afraid of reasoning. Kenyan proverb',
+  'Wisdom is not like money to be tied up and hidden. Akan proverb',
+  'Learning expands great souls. Namibian proverb',
+  'To get lost is to learn the way. African proverb',
+  'By crawling a child learns to stand. African proverb',
+  'If you close your eyes to facts, you will learn through accidents. African proverb',
+  'He who learns, teaches. Ethiopian proverb',
+  'Wealth, if you use it, comes to an end; learning, if you use it, increases. Swahili proverb',
+  'By trying often, the monkey learns to jump from the tree. Buganda proverb',
+  'You always learn a lot more when you lose than when you win. African proverb',
+  'You learn how to cut down trees by cutting them down. Bateke proverb',
+  'The wise create proverbs for fools to learn, not to repeat. African proverb',
+  'What you help a child to love can be more important than what you help him to learn. African proverb',
+  'By the time the fool has learned the game, the players have dispersed. Ashanti proverb',
+  'One who causes others misfortune also teaches them wisdom. African proverb',
+  'You do not teach the paths of the forest to an old gorilla. Congolese proverb',
+  'What you learn is what you die with. African proverb',
+  'Instruction in youth is like engraving in stone. Moroccan Proverb',
+  'When you follow in the path of your father, you learn to walk like him. Ashanti Proverb',
+  'Ears that do not listen to advice, accompany the head when it is chopped off. African Proverb',
+  'Advice is a stranger; if he\'s welcome he stays for the night; if not, he leaves the same day. Malagasy Proverb',
+  'Traveling is learning. Kenyan Proverb',
+  'Where there are experts there will be no lack of learners. Swahili Proverb',
+  'Peace is costly but it is worth the expense. Kenyan proverb',
+  'War has no eyes Swahili saying',
+  'When a king has good counselors, his reign is peaceful. Ashanti proverb',
+  'Peace does not make a good ruler. Botswana proverb',
+  'A fight between grasshoppers is a joy to the crow. Lesotho proverb',
+  'There can be no peace without understanding. Senegalese proverb',
+  'Milk and honey have different colors, but they share the same house peacefully. African proverb',
+  'If you can\'t resolve your problems in peace, you can\'t solve war. Somalian proverb',
+  'When there is peace in the country, the chief does not carry a shield. Ugandan proverb',
+  'When two elephants fight, it is the grass that gets trampled.  Swahili saying',
+  'Speak softly and carry a big stick; you will go far. West African proverb',
+  'He who thinks he is leading and has no one following him is only taking a walk. Malawian proverb',
+  'An army of sheep led by a lion can defeat an army of lions led by a sheep. Ghanaian proverb',
+  'He who is destined for power does not have to fight for it. Ugandan proverb',
+  'Do not forget what is to be a sailor because of being a captain yourself. Tanzanian proverb',
+  'Without a leader, black ants are confused. Ugandan proverb',
+  'He who refuses to obey cannot command. Kenyan proverb',
+  'He who fears the sun will not become chief. Ugandan proverb',
+  'A large chair does not make a king. Sudanese proverb',
+  'Because he lost his reputation, he lost a kingdom. Ethiopian proverb',
+  'Where a woman rules, streams run uphill. Ethiopian proverb',
+  'A leader who does not take advice is not a leader. Kenyan proverb',
+  'If the cockroach wants to rule over the chicken, then it must hire the fox as a body-guard. Sierra Leone proverb',
+  'Unity is strength, division is weakness. Swahili proverb',
+  'Sticks in a bundle are unbreakable. Bondei proverb',
+  'It takes a village to raise a child. African proverb',
+  'Cross the river in a crowd and the crocodile won\'t eat you. African proverb',
+  'Many hands make light work. Haya (Tanzania) proverb',
+  'Where there are many, nothing goes wrong. Swahili proverb',
+  'Two ants do not fail to pull one grasshopper. Tanzanian proverb',
+  'A single bracelet does not jingle. Congolese proverb',
+  'A single stick may smoke, but it will not burn. African proverb',
+  'If you want to go quickly, go alone. If you want to go far, go together. African proverb',
+  'A family is like a forest, when you are outside it is dense, when you are inside you see that each tree has its place. African Proverb',
+  'A united family eats from the same plate. Baganda proverb',
+  'A family tie is like a tree, it can bend but it cannot break. African proverb',
+  'If I am in harmony with my family, that\'s success. Ute proverb',
+  'Brothers love each other when they are equally rich. African proverb',
+  'Dine with a stranger but save your love for your family. Ethiopian proverb',
+  'There is no fool who is disowned by his family. African proverb',
+  'Home affairs are not talked about on the public square. African proverb',
+  'If relatives help each other, what evil can hurt them? African proverb',
+  'He who earns calamity, eats it with his family. African proverb',
+  'Dine with a stranger but save your love for your family. Ethiopian proverb',
+  'The old woman looks after the child to grow its teeth and the young one in turn looks after the old woman when she loses her teeth. Akan (Ghana, Ivory Coast) proverb',
+  'When brothers fight to the death, a stranger inherits their father\'s estate. Ibo proverb',
+  'Children are the reward of life. African proverb',
+  'To be without a friend is to be poor indeed.  Tanzanian proverb',
+  'Hold a true friend with both hands. African proverb',
+  'The friends of our friends are our friends.  Congolese proverb',
+  'A friend is someone you share the path with. African proverb',
+  'Show me your friend and I will show you your character. African proverb',
+  'Return to old watering holes for more than water; friends and dreams are there to meet you. African proverb',
+  'Between true friends even water drunk together is sweet enough. African proverb',
+  'A small house will hold a hundred friends. African proverb',
+  'A close friend can become a close enemy.African proverb',
+  'Bad friends will prevent you from having good friends.  Gabon proverb',
+  'Supposing doesn\'t fill the grain basket \'if\' doesn\'t fill the larder. Ovambo Proverb',
+  'There are no shortcuts to the top of the palm tree. Cameroonian Proverb',
+  'All monkeys cannot hang on the same branch. Kenyan Proverb',
+  'Those who are absent are always wrong. Congolese Proverb',
+  'God has created lands with lakes and rivers for man to live. And the desert so that he can find his soul.  Tuareg Proverb',
+  'Do not allow the belly to make you useless. Maasai Proverb',
+  'Little by little grow the bananas. Congolese Proverb',
+  'If you overtake a leader, you break your neck. Ugandan Proverb',
+  'The big game often appears when the hunter has given up the hunt for the day. Igbo Proverb',
+  'A clever king is the brother of peace. South African Proverb',
+  'Do not call to a dog with a whip in your hand. Sudanese Proverb',
+  'The blame of the antelope is on the hunter. Kenyan Proverb',
+  'Good music goes with good food. African Proverb',
+  'Haste and hurry can only bear children with many regrets along the way. Senegalese Proverb',
+  'A fully grown up tree cannot be bent into a walking stick. Kenyan Proverb',
+  'No matter how full the river, it still wants to grow. Congolese Proverb',
+  'Birds of all kinds will end up landing. Egyptian Proverb',
+  'I shall come for the cows after the donkeys have grown horns. Meru Proverb',
+  'If love is a sickness, patience is the remedy. Cameroonian Proverb',
+  'Other people\'s wisdom prevents the king from being called a fool. Nigerian Proverb',
+  'Knowledge without wisdom is like water in the sand. Guinean Proverb',
+  'Ingratitude is sooner or later fatal to its author. Twi Proverb',
+  'The laughter of a child lights up the house. Swahili proverb',
+  'Even an ant can hurt an elephant. South African Proverb',
+  'Examine what is said, not him who speaks. Egyptian Proverb',
+  'One camel does not make fun of the other camel\'s hump. Ghanaian Proverb',
+  'If you educate a man you educate one individual, but if you educate a woman you educate a family. Fanti Proverb',
+  'The sun never sets without fresh news. Xhosa Proverb',
+  'The good mother knows what her children will eat. Akan Proverb',
+  'When the mother goat breaks into the yam store her kid watches her. Igbo Proverb',
+  'Even as the archer loves the arrow that flies, so too he loves the bow that remains constant in his hands. Nigerian Proverb',
+  'Rich people cook their food in a potsherd. Kikuyu Proverb',
+  'Rising early makes the road short. African Proverb',
+  'If the elders leave you a legacy of dignified language, you do not abandon it and speak childish language. Ghanaian Proverb',
+  'The elephant does not limp when walking on thorns. Ethiopian Proverb',
+  'An ox shits more than a hundred mosquitoes Mozambican proverb',
+  'A person with too much ambition cannot sleep in peace. Chadian Proverb',
+  'There is no return, worse luck for could I return, I would foresee what has come into the country. Bantu Proverb',
+  'Around a flowering tree there are many insects. Guinean Proverb',
+  'He is like a drum which makes a lot of noise but is hollow inside. Sudanese Proverb',
+  'Coffee and love taste best when hot. Ethiopian Proverb',
+  'When the food is cooked there is no need to wait before eating it. Kikuyu Proverb',
+  'Baboons do not go far from the place of their birth. Masai Proverb',
+  'The chameleon looks in all directions before moving Ugandan Proverb',
+  'Lonely is one. Maasai Proverb',
+  'Time destroys all things. Nigerian Proverb',
+  'Little by little the bird builds its nest. Nigerian Proverb',
+  'Numbers can achieve anything. Ghanaian Proverb',
+  'A brave man dies once, a coward a thousand times. Somali Proverb',
+  'Only someone else can scratch your back. Kenyan Proverb',
+  'It\'s like removing a hyena from a pit. Meru Proverb',
+  'He who does not seize opportunity today, will be unable to seize tomorrow\'s opportunity. Somali Proverb',
+  'Misfortune of soup made of shanks and feet. Xhosa Proverb',
+  'Rich people sometimes eat bad food. Kikuyu Proverb',
+  'He who refuses to obey cannot command. Kenyan Proverb',
+  'The cow that bellows does so for all cows. Kenyan Proverb',
+  'The chameleon changes color to match the earth, the earth doesn\'t change colors to match the chameleon. Senegalese Proverb',
+  'If an arrow has not entered deeply, then its removal is not hard. Buli Proverb',
+  'Where error gets to, correction cannot reach. Ghanaian Proverb',
+  'We do not inherit the earth from our ancestors we borrow it from our children. Haida Proverb',
+  'If you damage the character of another, you damage your own. Yoruba Proverb',
+  'He who doesn\'t clean his mouth before breakfast always complains that the food is sour. African Proverb',
+  'You cannot climb to the mountain top without crushing some weeds with your feet. Ugandan Proverb',
+  'Even the best dancer on the stage must retire sometime. African Proverb',
+  'If you have no teeth, do not break to clay cooking pot. Chewa Proverb',
+  'When the moon is not full, the stars shine more brightly. Buganda People of Uganda',
+  'Leadership comes from God. Kenyan Proverb',
+  'The friends of our friends are our friends. Congolese Proverb',
+  'The elders of the village are the boundaries. Ghanaian Proverb',
+  'Those who are born on top of the anthill take a short time to grow tall. Ghanaian Proverb',
+  'When a fish rots, the head stinks first Ghanaian Proverb',
+  'One foot isn\'t enough to walk with. Egyptian Proverb',
+  'An empty pot makes the loudest noise. Kenyan Proverb',
+  'If you are building a house and a nail breaks, do you stop building, or do you change the nail? African Proverb',
+  'Where a woman rules, stream run uphill. Ethiopian Proverb',
+  'If a stranger comes to stay with you, do not forget when you lay aside his weapons that he is hungry. Maasai Proverb',
+  'Do not call to a dog with a whip in your hand. Sudanese Proverb',
+  'Good millet is known at the harvest. Liberian Proverb',
+  'Family names are like flowers, they blossom in clusters. African Proverb',
+  'One fly does not provide for another Xhosa Proverb',
+  'It is not the cook\'s fault when the cassava turns out to be hard and tasteless. Ewe Proverb',
+  'It is the belly which daily gives thanks. Maasai Proverb',
+  'No matter how big a child is, he cannot deny that he was once carried on the back of a woman. African Proverb',
+  'If you do not know death, look at the grave. Kenyan Proverb',
+  'When the lion cannot find meat, it eats grass. Kenyan Proverb',
+  'When a woman is hungry, she says, Roast something for the children that they might eat. Ashanti Proverb',
+  'One whose seeds have not sprouted does not give up planting. Kenyan Proverb',
+  'A king\'s child is a slave elsewhere. Zimbabwean Proverb',
+  'He who loves the vase loves also what is inside. African Proverb',
+  'What is bad luck for one man is good luck for another. Ashanti Proverb',
+  'Prepare now for the solutions of tomorrow. Congolese Proverb',
+  'The bee is the doctor of flowers. Congolese Proverb',
+  'A bridge is repaired only when someone falls into the water. Somali Proverbs',
+  'What is inflated too much will break into fragments. Ethiopian Proverb',
+  'However much it rains on you, no wild banana tree will grow on your head. Kenyan Proverb',
+  'A snake that you can see does not bite. Mozambican Proverb',
+  'One who relates with a corrupt person likewise gets corrupted. Kenyan Proverb',
+  'The words of the elders become sweet some day. Malawian Proverb',
+  'More precious than our children are the children of our children. Egyptian Proverb',
+  'The Rhinoceros never dances with the monkey. Nigerian Proverb',
+  'Confiding a secret to an unworthy person is like carrying grain in a bag with a hole. Nilotic Proverb',
+  'Unity is the real thing Kenyan Proverb',
+  'A bird that allows itself to be caught will find a way of escaping. Cameroonian Proverb',
+  'Better little, than too little. Burundian Proverb',
+  'If you are ugly you must either learn to dance or make love. Zimbabwean Proverb',
+  'If there were no elephant in the jungle, the buffalo would be a great animal. Ghanaian Proverb',
+  'The brother or sister who does not respect the traditions of the elders will not be allowed to eat with the elders. Proverb from Ga People of Ghana',
+  'No tattoo is made without blood. Mozambican Proverb',
+  'Live patiently in the world know that those who hate you are more numerous than those who love you. African Proverb',
+  'A child one does not instruct on return, one instructs him when going. Bantu Proverb',
+  'Suppression of hunger leads to death. Kenyan Proverb',
+  'A canoe does not know who the leader is when it turns over, everyone gets wet. Proverb from Madagascar',
+  'We should put out fire while it is still small. Kenyan Proverb',
+  'Water that has been begged for does not quench the thirst. Soga People of Uganda',
+  'Let it be a bite of a cockroach and fly with the wind. Meru Proverb',
+  'The song of a stranger-woman is answered after she has gone. Kikuyu Proverb',
+  'The humble pay for the mistakes of their leaders. Tanzanian Proverb',
+  'Discord between the powerful is a fortune for the poor. African Proverb',
+  'No person is born great great people become great when others are sleeping. African Proverb',
+  'A person who has children does not die. Nigerian Proverb',
+  'Dance, father, people\'s eyes don\'t eat, they just stare. Bantu Proverb',
+  'Who ever suggested that rats should become chiefs ? Ugandan Proverb',
+  'Rain does not fall on one roof alone. Cameroonian Proverb',
+  'He who dictates separates himself from others. Somali Proverb',
+  'The jungle is stronger than the elephant. South African Proverb',
+  'He has rubbed shoulders against a baobab tree. Meru Proverb',
+  'If your mouth turns into a knife, it will cut off your lips. Rwandan Proverb',
+  'Women have no chief. Acholi Proverb',
+  'If your sister is in the group of singing girls, you name always comes into the song. Ghanaian Proverb',
+  'The antics of a market buffoon provide laughter, but nobody prays that his child becomes the market buffoon. African Proverb',
+  'A rooster is not expected to crow for the whole world. African Proverb',
+  'To lead is not to run roughshod over people Kenyan Proverb',
+  'If while climbing a tree you insist on going beyond the top, the earth will be waiting for you. African Proverb',
+  'One arrow can knock down an elephant. Kenyan Proverb',
+  'All errors are amendable. African Proverb',
+  'A weaning baby that does not cry aloud will die on its mothers back. Zimbabwean Proverb',
+  'No water without waves. Kenyan Proverb',
+  'Even if you bewitch in the night, you will be known. Kenyan Proverb',
+  'Glory does not come by calling. Kenyan Proverb',
+  'He who cannot dance will say, The drum is bad! Ashanti Proverb',
+  'The stick in the hand kills the snake. Kenyan Proverb',
+  'A tree cannot stand without roots. Congolese Proverb',
+  'Horn blowers, blow in unison. Ugandan Proverb',
+  'A Tutsi liked to warm himself by the fire someone else took the bull. Zinza People of Tanzania',
+  'Crying a lot does not give you peace of mind. Burundian Proverb',
+  'If a leader loves you, he makes sure you build your house on rock Ugandan Proverb',
+  'Old and new millet seeds end up in the same mill. Acholi Proverb',
+  'If while climbing a tree you insist on going beyond the top, the earth will be waiting for you. African Proverb',
+  'Love is a despot who spares no one. Namibian Proverb',
+  'When you mention the person with one eye, the one with the eye problem reacts. Kenyan Proverb',
+  'A tree does not move unless there is wind. Nigerian Proverb',
+  'Love is like a baby: it needs to be treated tenderly. Congolese Proverb',
+  'A quarrelsome chief does not hold a village together. Malawian Proverb',
+  'The belly does not swell if a woman is not pregnant. Maasai Proverb',
+  'We are what our thinking makes us. Nigerian Proverb',
+  'To love someone who does not love you, is like shaking a tree to make the dew drops fall. African Proverb from The Congo',
+  'A slippery person is not a king. Kenyan Proverb',
+  'It is difficult for two long-nosed lovers to kiss. African Proverb',
+  'The vultures would not land at the village in which there is a wise old man. Meru Proverb',
+  'The strong bull is overcome when it limps Ethiopian Proverb',
+  'The eye cannot penetrate darkness. Maasai Proverb',
+  'He who learns, teaches. Ethiopian Proverb',
+  'Copying everyone else all the time, the monkey one day cut his throat. Zulu Proverb',
+  'The strong do not need clubs. Senegalese Proverb',
+  'When a king reigns, it is thanks to the people when a river sings, it is thanks to the stones. African Proverb',
+  'If the palm of the hand itches it signifies the coming of great luck. Lesotho Proverb',
+  'He who is unable to dance says the yard is stony. Kenyan Proverb',
+  'The one nearest to the enemy is the real leader Ugandan Proverb',
+  'The hen pecks and wipes its beak. Kenyan Proverb',
+  'A flea can trouble a lion more than a lion can trouble a flea. Kenyan Proverb',
+  'So many little things makes a man love a woman in a BIG way. Ghanaian Proverb',
+  'When I think of the others\'s misfortunes, I forget mine. Algerian Proverb',
+  'If a blind man says he will throw a stone at you, he probably has his foot on one. Ghanaian Proverb',
+  'Every door has its own key. Kenyan Proverb',
+  'Supposing doesn\'t fill the grain basket \'if\' doesn\'t fill the larder. Ovambo Proverb',
+  'Every fame has a foundation. African Proverb',
+  'To neglect one\'s ancestors would bring ill-fortune and failure in life. African Proverb',
+  'Happiness requires something to do, something to love and something to hope for. Swahili Proverb',
+  'A bird that flies from the ground onto an anthill does not know that it is still on the ground. Nigerian Proverb',
+  'You can not tell a hungry child that you gave him food yesterday. Zimbabwean Proverb',
+  'What has horns must not be hid in a sack. Zulu Proverb',
+  'An okra tree does not grow taller that its master. Krio (Sierra Leona) Proverb',
+  'He is a fool whose sheep runs away twice. Ashanti Proverb',
+  'When your neighbour\'s horse falls into a pit, you should not rejoice at it, for your own child may fall into it too. Yoruba Proverb',
+  'All heads are the same, but not all thoughts are the same. Ghanaian Proverb',
+  'Even the fiercest leader in the world is overcome by sleep. Malawian Proverb',
+  'Supposing doesn\'t fill the grain basket \'if\' doesn\'t fill the larder. Ovambo Proverb',
+  'Fear no forest because it is dense. African Proverb',
+  'An empty pot makes the loudest noise. Kenyan Proverb',
+  'One head alone does not go into council Ghanaian Proverb',
+  'Birds sing not because they have answers but because they have songs. African Proverb',
+  'A slave has no choice. Kenyan Proverb',
+  'Children are the reward of life. African Proverb from the Congo',
+  'Obstinacy does not redeem anyone. Malawian Proverb',
+  'When a thing becomes perfect, it soon fades. Moroccan Proverb',
+  'A man\'s wealth may be superior to him. Cameroonian Proverb',
+  'No masika (rain season) without mosquitoes. Kenyan Proverb',
+  'Only a medicine man gets rich by sleeping. Kenyan Proverb',
+  'The rain does not recognize anyone as a friend it drenches all equally. Ibo Proverb (Nigeria)',
+  'The betrothed of good is evil the betrothed of life is death the betrothed of love is divorce. Malawian Proverb',
+  'Never marry a woman who has bigger feet than you. Mozambican Proverb',
+  'No matter how beautiful and well crafted a coffin might look, it will not make anyone wish for death. African Proverb',
+  'The heart of the wise man lies quiet like limpid water. Proverb from Cameroon',
+  'Hope does not disappoint. South African Proverb',
+  'Those who accomplish great things pay attention to little ones. Malian Proverb',
+  'A child\'s lie is like a dead fish in a pond that in the end, always comes to the surface, explains his mother. Luo proverb',
+  'If two wise men always agree, then there is no need for one of them. Zambian Proverb',
+  'If you are filled with pride, then you will have no room for wisdom. Tanzanian Proverb',
+  'The key to a healthy body is a good head. Somali Proverb',
+  'If the wind blows, it enters every crevice. Egyptian Proverb',
+  'The more feathers a chicken has, the bigger it looks. Zambian Proverb',
+  'Don\'t fight a lion with a stick. Maasai Proverb',
+  'Do not tell the man who is carrying you that he stinks. African Proverb from Sierra Leone',
+  'Where there is no shame, there is no honor. Ethiopian Proverb',
+  'When your neighbour is wrong you point a finger, but when you are wrong you hide. Proverb from Ekonda People of the Congo',
+  'A crowd can easily overpower a bull. South African Proverb',
+  'It is the grass that suffers when elephants fight. Kenyan Proverb',
+  'If we put a hammer in every person\'s hand, could they all become blacksmiths? Ghanaian Proverb',
+  'There is not such a thing in the world as a sheep of many colours. Masai Proverb',
+  'The roaring lion kills no prey Nigerian Proverb',
+  'Even in the monastery there is occasion for song and merriment. Ethiopian Proverb',
+  'Being happy is better than being king. Nigerian Proverb',
+  'A boat cannot go forward if each rows his own way. Tanzanian Proverb',
+  'A little rain each day will fill the rivers to overflowing. African Proverb from Madagascar',
+  'The growing millet does not fear the sun. Acholi Proverb',
+  'You don\'t need a light to see someone you know intimately at night. Ghanaian Proverb',
+  'Gold should be sold to the one who knows the value of it. African Proverb',
+  'Slowly, slowly, porridge goes into the gourd. Kuria People of Kenyan and Tanzania',
+  'You cannot force water up a hill. Maasai Proverb',
+  'When a strong man sends a message, he sends it with a weak man Ethiopian Proverb',
+  'A child does not laugh at the ugliness of his mother. Ghanaian Proverb',
+  'A deaf ear is followed by death and an ear that listens is followed by blessings. Samburu Proverb',
+  'A big fish is caught with big bait. African Proverb from Sierra Leone',
+  'Wealth is like hair in the nose: it hurts to be separated whether from a little or from a lot. Malagasy Proverb',
+  'If you think you have someone eating out of your hands, it is a good idea to count your fingers. Nigerian Proverb',
+  'Even the Niger river must flow around an island. Hausa Proverb',
+  'Where you will sit when you are old shows where you stood in youth. Yoruba Proverb',
+  'Leadership does not depend on age. Namibian Proverb',
+  'Words are sweet, but they never take the place of food. Ibo proverb',
+  'A single bracelet does not jingle. Congolese Proverb',
+  'Pretend you are dead and you will see who really loves you. African Proverb',
+  'A woman is never old when it comes to the dance she knows. African Proverb',
+  'When the baobab tree has fallen, the goats start climbing on it. Malian Proverb',
+  'Eat when the food is ready speak when the time is right. Ethiopian Proverb',
+  'One who causes others misfortune also teaches them wisdom. African Proverb',
+  'When the powerful sit, they are none the weaker. Ugandan Proverb',
+  'Too much discussion leads to a quarrel. Ivorian Proverb',
+  'He who tells the truth is never wrong. Swahili Proverb',
+  'If you do not have patience you cannot make beer. Ovambo proverb',
+  'An intelligent enemy is better than a stupid friend. Senegalese proverb'
+];
+
+const skillBuilder = Alexa.SkillBuilders.standard();
+
+exports.handler = skillBuilder
+  .addRequestHandlers(
+    AfricanProverbHandler,
+    HelpHandler,
+    ExitHandler,
+    SessionEndedRequestHandler
+  )
+  .addErrorHandlers(ErrorHandler)
+  .lambda();
